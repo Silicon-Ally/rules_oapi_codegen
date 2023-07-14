@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "server",
+    srcs = ["server.go"],
+    importpath = "github.com/Silicon-Ally/rules_oapi_codegen/example/server",
+    visibility = ["//visibility:public"],
+    deps = ["//:api_generated"],
+)

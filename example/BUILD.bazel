@@ -1,0 +1,56 @@
+load("@rules_oapi_codegen//oapi_codegen:def.bzl", "oapi_codegen_go")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix github.com/Silicon-Ally/rules_oapi_codegen/example
+# gazelle:resolve go github.com/Silicon-Ally/rules_oapi_codegen/example/api //:api_generated
+gazelle(name = "gazelle")
+
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=deps.bzl%go_dependencies",
+        "-prune",
+    ],
+    command = "update-repos",
+)
+
+oapi_codegen_go(
+    name = "api",
+    importpath = "github.com/Silicon-Ally/rules_oapi_codegen/example/api",
+    spec = "petstore.yaml",
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "example_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/Silicon-Ally/rules_oapi_codegen/example",
+    visibility = ["//visibility:private"],
+    deps = [
+        ":api_generated",
+        "//server",
+        "@com_github_deepmap_oapi_codegen//pkg/chi-middleware",
+        "@com_github_go_chi_chi_v5//:chi",
+    ],
+)
+
+go_binary(
+    name = "example",
+    embed = [":example_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "example_test",
+    srcs = ["main_test.go"],
+    embed = [":example_lib"],
+    deps = [
+        ":api_generated",
+        "//server",
+        "@com_github_deepmap_oapi_codegen//pkg/chi-middleware",
+        "@com_github_go_chi_chi_v5//:chi",
+        "@com_github_google_go_cmp//cmp",
+    ],
+)
