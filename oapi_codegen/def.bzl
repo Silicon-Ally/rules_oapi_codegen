@@ -1,6 +1,21 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 def oapi_codegen_go(name, spec, importpath, visibility, **kwargs):
+    """Generates Go bindings for an OpenAPI 3.0 spec.
+
+    This rule runs [oapi-codegen](https://github.com/deepmap/oapi-codegen) to
+    produce a generated Go library providing, among other things, a strictly
+    typed API stub interface to implement your API against.
+
+    Args:
+      name: A unique name for this rule.
+      spec: The OpenAPI 3.0 YAML specification for your API, must be self-contained.
+      importpath: The importpath of the directory the rule is defined in, like
+        'github.com/<org>/<repo>/path/to/dir/api'. This is the import path of
+        the generated Go library
+      visibility: The visibility of the generated go_library target.
+    """
+
     codegen_args = {
         "name": name,
         "spec": spec,
