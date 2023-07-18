@@ -3,3 +3,4 @@ bazel-out
 bazel-testlogs
 bazel-rules_oapi_codegen
 bazel-example
+rules_oapi_codegen-*.zip

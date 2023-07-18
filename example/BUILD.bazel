@@ -1,4 +1,4 @@
-load("@rules_oapi_codegen//oapi_codegen:def.bzl", "oapi_codegen_go")
+load("@com_siliconally_rules_oapi_codegen//oapi_codegen:def.bzl", "oapi_codegen_go")
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 

@@ -21,13 +21,13 @@ http_archive(
 # In a non-example project, this would usually be imported with http_archive or
 # similar, see the rules_oapi_codegen release notes for more details.
 local_repository(
-  name="rules_oapi_codegen",
+  name="com_siliconally_rules_oapi_codegen",
   path= "..",
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-load("@rules_oapi_codegen//:deps.bzl", "oapi_dependencies")
+load("@com_siliconally_rules_oapi_codegen//:deps.bzl", "oapi_dependencies")
 load("//:deps.bzl", "go_dependencies")
 
 # gazelle:repository_macro deps.bzl%go_dependencies
