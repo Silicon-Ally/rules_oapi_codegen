@@ -15,6 +15,9 @@ import (
 	oapimiddleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
 )
 
+// This code shouldn't error because we've enabled skip-prune
+var _ api.UnreferencedComponent
+
 func main() {
 	if err := run(os.Args); err != nil {
 		log.Fatal(err)

@@ -20,6 +20,7 @@ oapi_codegen_go(
     name = "api",
     importpath = "github.com/Silicon-Ally/rules_oapi_codegen/example/api",
     spec = "petstore.yaml",
+    skip_prune = True,
     visibility = ["//visibility:public"],
 )
 

@@ -1,6 +1,6 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
-def oapi_codegen_go(name, spec, importpath, visibility, **kwargs):
+def oapi_codegen_go(name, spec, importpath, visibility, skip_prune=False, **kwargs):
     """Generates Go bindings for an OpenAPI 3.0 spec.
 
     This rule runs [oapi-codegen](https://github.com/deepmap/oapi-codegen) to
@@ -14,11 +14,13 @@ def oapi_codegen_go(name, spec, importpath, visibility, **kwargs):
         'github.com/<org>/<repo>/path/to/dir/api'. This is the import path of
         the generated Go library
       visibility: The visibility of the generated go_library target.
+      skip_prune: Whether or not to generate code for unreferenced schema components.
     """
 
     codegen_args = {
         "name": name,
         "spec": spec,
+        "skip_prune": skip_prune,
     }
     codegen_args.update(kwargs)
     _oapi_codegen_go(**codegen_args)
@@ -40,10 +42,14 @@ def _oapi_codegen_go_impl(ctx):
     spec = ctx.file.spec
     output = ctx.actions.declare_file(ctx.label.name + ".gen.go")
 
+    targets = ["types","client","chi-server","strict-server","spec"]
+    if ctx.attr.skip_prune:
+        targets.append("skip-prune")
+
     args = ctx.actions.args()
     args.add("-package", ctx.label.name)
     args.add("-o", output)
-    args.add("-generate", "types,client,chi-server,strict-server,spec")
+    args.add("-generate", ",".join(targets))
     args.add(spec.path)
 
     ctx.actions.run(
@@ -63,6 +69,9 @@ _oapi_codegen_go = rule(
     attrs = {
         "spec": attr.label(
             allow_single_file = True,
+            mandatory = True,
+        ),
+        "skip_prune": attr.bool(
             mandatory = True,
         ),
         "_codegen": attr.label(

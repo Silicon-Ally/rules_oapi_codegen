@@ -162,3 +162,12 @@ components:
         message:
           type: string
           description: Error message
+
+    UnreferencedComponent:
+      description: Exists to test the 'skip-prune' option
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Error message
